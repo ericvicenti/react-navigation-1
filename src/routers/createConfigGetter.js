@@ -68,6 +68,7 @@ export default (
     const childRoute = routes[index];
     const childNavigation = addNavigationHelpers({
       state: childRoute,
+      events: navigation.events.of(childRoute.key),
       dispatch,
     });
     outputConfig = router.getScreenOptions(childNavigation, screenProps);

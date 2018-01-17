@@ -150,6 +150,7 @@ export default class DrawerView extends React.PureComponent<
     this._screenNavigationProp = addNavigationHelpers({
       dispatch: navigation.dispatch,
       state: navigationState,
+      events: navigation.events.of(navigationState.key),
     });
   };
 
@@ -191,13 +192,8 @@ export default class DrawerView extends React.PureComponent<
       this.props.drawerCloseRoute
     );
 
-    const screenNavigation = addNavigationHelpers({
-      state: this._screenNavigationProp.state,
-      dispatch: this._screenNavigationProp.dispatch,
-    });
-
     const config = this.props.router.getScreenOptions(
-      screenNavigation,
+      this._screenNavigationProp,
       this.props.screenProps
     );
 

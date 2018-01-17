@@ -54,9 +54,12 @@ export default function withCachedChildNavigation<
         if (childNavigation && childNavigation.state === route) {
           return;
         }
+        const events = navigation.events.of(route.key);
+        console.log('hi', events);
         this._childNavigationProps[route.key] = addNavigationHelpers({
           dispatch: navigation.dispatch,
           state: route,
+          events,
         });
       });
     };

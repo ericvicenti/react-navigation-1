@@ -28,6 +28,7 @@ export default class SceneView extends React.PureComponent<Props> {
 
   render() {
     const { screenProps, navigation, component: Component } = this.props;
+    console.log('ok!!', !!navigation.events);
     return <Component screenProps={screenProps} navigation={navigation} />;
   }
 }

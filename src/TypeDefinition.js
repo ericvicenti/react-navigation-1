@@ -398,17 +398,29 @@ export type NavigationDrawerScreenOptions = {|
  * Navigator Prop
  */
 
+export type NavigationEventEmitter = {
+  +addEventListener: (
+    eventName: string,
+    eventHandler: (input: mixed) => void
+  ) => {
+    +remove: () => void,
+  },
+  +of: (childRoute: string) => NavigationEventEmitter,
+};
+
 export type NavigationDispatch = (
   action: PossiblyDeprecatedNavigationAction
 ) => boolean;
 
 export type NavigationProp<S> = {
   +state: S,
+  +events: NavigationEventEmitter,
   dispatch: NavigationDispatch,
 };
 
 export type NavigationScreenProp<+S> = {
   +state: S,
+  +events: NavigationEventEmitter,
   dispatch: NavigationDispatch,
   goBack: (routeKey?: ?string) => boolean,
   navigate: (

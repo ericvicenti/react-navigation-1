@@ -17,7 +17,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       <SampleText>{banner}</SampleText>
       <Button
         onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-        title="Go to a profile screen"
+        title="Go to a profile2 screen"
       />
       <Button
         onPress={() => navigation.navigate('HeaderTest')}

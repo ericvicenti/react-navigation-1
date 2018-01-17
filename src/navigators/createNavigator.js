@@ -49,6 +49,7 @@ export default function createNavigator<
       static navigationOptions = null;
 
       render() {
+        console.log('rendering navigator', this.props.navigation.state);
         return <NavigationView {...this.props} router={router} />;
       }
     }

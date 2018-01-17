@@ -144,6 +144,7 @@ class CardStack extends React.Component<Props> {
       > = addNavigationHelpers({
         dispatch: navigation.dispatch,
         state: scene.route,
+        events: navigation.events.of(scene.route.key),
       });
       screenDetails = {
         state: scene.route,

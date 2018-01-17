@@ -15,6 +15,7 @@ import type {
   NavigationInitAction,
   NavigationContainerProps,
   NavigationContainer,
+  NavigationEventEmitter,
 } from './TypeDefinition';
 
 type State<NavState> = {
@@ -27,6 +28,35 @@ type State<NavState> = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
+
+function createEventEmitter(): NavigationEventEmitter {
+  const eventHandlers = {};
+  const childEvents = {};
+  return {
+    emit: (name, data) => {
+      const handlerSet =
+        eventHandlers[name] || (eventHandlers[name] = new Set());
+      const handlers = handlerSet.entries();
+      handlers.forEach(handler => handler(data));
+    },
+    addEventListener: (name, handler) => {
+      const handlerSet =
+        eventHandlers[name] || (eventHandlers[name] = new Set());
+      handlerSet.add(handler);
+      return {
+        remove: () => {
+          handlerSet.delete(handler);
+        },
+      };
+    },
+    of: childKey => {
+      const childEmitter =
+        childEvents[childKey] || (childEvents[childKey] = createEventEmitter());
+      return childEmitter;
+    },
+  };
+}
+
 export default function createNavigationContainer<S: NavigationState, O: {}>(
   // Let the NavigationNavigator props flowwwww
   Component: NavigationNavigator<S, O, *>
@@ -42,13 +72,15 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
     static router = Component.router;
     static navigationOptions = null;
 
+    _events: NavigationEventEmitter = createEventEmitter();
+
     constructor(props: NavigationContainerProps<S, O>) {
       super(props);
 
       this._validateProps(props);
-
+      const isStateful = this._isStateful();
       this.state = {
-        nav: this._isStateful()
+        nav: isStateful
           ? Component.router.getStateForAction(NavigationActions.init())
           : null,
       };
@@ -204,6 +236,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
           this._navigation = addNavigationHelpers({
             dispatch: this.dispatch,
             state: nav,
+            events: this._events,
           });
         }
         navigation = this._navigation;
